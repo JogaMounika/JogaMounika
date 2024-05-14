@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 1000px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgb(231, 202, 202);
+        }
+        h1 {
+            text-align: center;
+            color: white;
+        }
+        /* Music player UI */
+        #player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        #player.active {
+            display: block;
+        }
+        #player img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        #player .track-info {
+            display: inline-block;
+            vertical-align: top;
+        }
+        #player audio {
+            width: calc(100% - 70px);
+            margin-top: 5px;
+        }
+        /* Album list UI */
+        .album-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .album-list li {
+            padding: 10px;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: larger;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .album-list li:hover {
+            background-color: #b0a9a9;
+           
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Music Player</h1>
+        <ul class="album-list">
+            <li data-album="Album 1">Family Star</li>
+            <li data-album="Album 2">mad</li>
+            <li data-album="Album 1">the worrior</li>
+            <li data-album="Album 2">taxi wala</li>
+            <li data-album="Album 1">subramanyam for sales </li>
+            <li data-album="Album 2">tholi prema</li>
+            <li data-album="Album 1">seetha</li>
+            <li data-album="Album 2">Sir</li>
+            <!-- Add more albums as needed -->
+        </ul>
+        <ul id="song-list" class="song-list" style="display: none;">
+            <!-- Song list for selected album will be dynamically added here -->
+        </ul>
+    </div>
+
+    <div id="player">
+        <img id="player-cover" src="../resume and music code/img1.jpg" alt="Cover">
+        <div class="track-info" id="player-track-info">
+            <h3 id="player-title"></h3>
+            <p id="player-artist"></p>
+        </div>
+        <audio id="audioPlayer" controls>
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <script class="sc">
+        // Sample data (replace with actual data)
+        const albums = {
+            "Album 1": [
+                { title: 'nandhanadhana', artist: 'Artist 1', cover: 'img1.jpg', audio: 'song1.mp3' },
+                { title: 'kalyanamvache', artist: 'Artist 2', cover: 'img2.jpg', audio: 'song2.mp3' },
+                { title: 'dont judge me', artist: 'Artist 3', cover: 'img1.jpg', audio: 'song3.mp3' },
+                { title: 'dekho', artist: 'Artist 4', cover: 'img1.jpg', audio: 'song4.mp3' },
+                // Add more songs for Album 1 as needed
+            ],
+            "Album 2": [
+                { title: '', artist: 'Artist 3', cover: 'cover3.jpg', audio: 'track3.mp3' },
+                { title: 'Track 4', artist: 'Artist 4', cover: 'cover4.jpg', audio: 'track4.mp3' },
+                // Add more songs for Album 2 as needed
+            ]
+            // Add more albums as needed
+        };
+
+        // Get album list elements
+        const albumListItems = document.querySelectorAll('.album-list li');
+
+        // Add click event listener to each album list item
+        albumListItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const album = item.getAttribute('data-album');
+                displaySongs(album);
+            });
+        });
+
+        // Function to display songs for a selected album
+        function displaySongs(album) {
+            const songList = document.getElementById('song-list');
+            const albumSongs = albums[album];
+            songList.innerHTML = '';
+            albumSongs.forEach(song => {
+                const li = document.createElement('li');
+                li.textContent = `${song.title} - ${song.artist}`;
+                li.setAttribute('data-title', song.title);
+                li.setAttribute('data-artist', song.artist);
+                li.setAttribute('data-src', song.audio);
+                songList.appendChild(li);
+            });
+            songList.style.display = 'block';
+        }
+
+        // Add click event listener to each song list item
+        document.getElementById('song-list').addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'LI') {
+                const title = target.getAttribute('data-title');
+                const artist = target.getAttribute('data-artist');
+                const src = target.getAttribute('data-src');
+                playTrack(title, artist, src);
+            }
+        });
+
+        // Function to play a track
+        function playTrack(title, artist, src) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const playerCover = document.getElementById('player-cover');
+            const playerTitle = document.getElementById('player-title');
+            const playerArtist = document.getElementById('player-artist');
+            audioPlayer.src = src;
+            playerTitle.textContent = title;
+            playerArtist.textContent = artist;
+            audioPlayer.play();
+            document.getElementById('player').classList.add('active');
+        }
+    </script>
+</body>
+</html>
